@@ -1,4 +1,5 @@
 use rand::{seq::SliceRandom, Rng};
+
 const ALPHABETS: [char; 26] = [
     'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
 ];
@@ -14,7 +15,7 @@ const NUMERIC_CHARS: [char; 10] = [
 macro_rules! read_input {
     ($t:tt) => {{
         let mut temp = String::new();
-        std::io::stdin().read_line(&mut temp).expect("Failed to read input");
+        std::io::stdin().read_line(&mut temp).expect("Invalid input");
         temp.trim().parse::<$t>().unwrap()
     }};
 }
@@ -28,8 +29,6 @@ fn main() {
     let numeric_chars = read_input!(i32);
 
     generate_password(password_length, special_chars, numeric_chars)
-
-
 }
 
 fn generate_password(password_length: i32, special_chars: i32, numeric_chars: i32) {
@@ -37,23 +36,19 @@ fn generate_password(password_length: i32, special_chars: i32, numeric_chars: i3
         println!("Password length must be greater than amount of special characters and digits");
         return
     }
-
-    
-    let mut password: Vec<String> = vec![];
     let mut random_special_chars: Vec<String> = vec![];
     let mut random_numbers: Vec<String> = vec![];
-    // let mut random_alphabets: Vec<String> = vec![];
 
     for _i in 1..=special_chars {
-        let random_special_char = SPECIAL_CHARS.choose(&mut rand::thread_rng()).unwrap();
-        random_special_chars.push(random_special_char.to_string());
+        random_special_chars.push(SPECIAL_CHARS.choose(&mut rand::thread_rng()).unwrap().to_string());
     }
     
     for _i in 1..=numeric_chars {
-        let random_number = NUMERIC_CHARS.choose(&mut rand::thread_rng()).unwrap();
-        random_numbers.push(random_number.to_string());
+        random_numbers.push(NUMERIC_CHARS.choose(&mut rand::thread_rng()).unwrap().to_string());
     }   
-
+    
+    
+    let mut password: Vec<String> = vec![];
     for _i in 0..=password_length {
         let choice: String = match rand::thread_rng().gen_range(0..=2) {
             0 => {
@@ -78,12 +73,11 @@ fn generate_password(password_length: i32, special_chars: i32, numeric_chars: i3
             _ => { "This should not have happened".to_string()}
         };
 
-        password.push(choice)
-        
+        password.push(choice)        
     }
 
     let password = password.join("");
-    println!("Here is your super secret password: \"{}\", guard it safely", password)
+    println!("Here is your super secret password: \"{}\", guard it safely :)", password)
 
 
 }
@@ -93,8 +87,8 @@ fn generate_alphabet() -> String {
     let mut alphabet = ALPHABETS.choose(&mut rand::thread_rng()).unwrap().to_string();
 
     let is_to_uppercase: bool = match rand::thread_rng().gen_range(0..=1) {
-        0 => { true},
-        1 => { false},
+        0 => {true},
+        1 => {false},
         _ => {false}
     };
 
