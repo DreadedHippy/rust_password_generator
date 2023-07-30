@@ -1,5 +1,4 @@
 use rand::{seq::SliceRandom, Rng};
-
 const ALPHABETS: [char; 26] = [
     'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
 ];
@@ -38,18 +37,23 @@ fn generate_password(password_length: i32, special_chars: i32, numeric_chars: i3
     }
     let mut random_special_chars: Vec<String> = vec![];
     let mut random_numbers: Vec<String> = vec![];
-
+    let mut random_alphabets: Vec<String> = vec![];
+    
     for _i in 1..=special_chars {
         random_special_chars.push(SPECIAL_CHARS.choose(&mut rand::thread_rng()).unwrap().to_string());
     }
     
     for _i in 1..=numeric_chars {
         random_numbers.push(NUMERIC_CHARS.choose(&mut rand::thread_rng()).unwrap().to_string());
-    }   
+    }
+
+    for _i in 1..=(password_length - (special_chars+numeric_chars)) {
+        random_alphabets.push(generate_alphabet());
+    }
     
     
     let mut password: Vec<String> = vec![];
-    for _i in 0..=password_length {
+    for _i in 1..=password_length {
         let choice: String = match rand::thread_rng().gen_range(0..=2) {
             0 => {
                 if let Some(r) = random_special_chars.pop() {
@@ -57,19 +61,27 @@ fn generate_password(password_length: i32, special_chars: i32, numeric_chars: i3
                 } else if let Some(r) = random_numbers.pop() {
                     r
                 } else {
-                    generate_alphabet()
+                    random_alphabets.pop().unwrap()
                 }
             },
             1 => {
                 if let Some(r) = random_numbers.pop() {
                     r
+                } else if let Some(r) = random_alphabets.pop() {
+                    r
+                } else {
+                    random_special_chars.pop().unwrap()
+                }         
+            },
+            2 => {
+                if let Some(r) = random_alphabets.pop() {
+                    r
                 } else if let Some(r) = random_special_chars.pop() {
                     r
                 } else {
-                    generate_alphabet()
-                }         
+                    random_numbers.pop().unwrap()
+                }
             },
-            2 => {generate_alphabet()},
             _ => { "This should not have happened".to_string()}
         };
 
